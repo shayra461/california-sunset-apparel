@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -26,53 +26,59 @@ const caps = [
   { src: capOrangeBlue, label: "Orange & Blue Snapback", color: "#c94a0a" },
 ];
 
-// 3-card shuffle deck
-const CARD_COUNT = 3;
+const CARD_COUNT = caps.length;
+
+// Returns position slot: 0 = center, -1 = left, +1 = right (wrapping)
+const getSlot = (i: number, active: number, total: number) => {
+  let diff = i - active;
+  if (diff > Math.floor(total / 2)) diff -= total;
+  if (diff < -Math.floor(total / 2)) diff += total;
+  return diff; // -1, 0, or 1 for a 3-cap deck
+};
 
 const CapSlider = () => {
   const [active, setActive] = useState(0);
-  const [prev, setPrev] = useState<number | null>(null);
-  const [direction, setDirection] = useState(1); // 1 = next, -1 = prev
   const heroRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const smoothX = useSpring(rotateX, { stiffness: 120, damping: 18 });
-  const smoothY = useSpring(rotateY, { stiffness: 120, damping: 18 });
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  const smoothTiltX = useSpring(tiltX, { stiffness: 100, damping: 20 });
+  const smoothTiltY = useSpring(tiltY, { stiffness: 100, damping: 20 });
 
-  // Auto-advance
-  useEffect(() => {
-    const id = setInterval(() => {
-      setDirection(1);
-      setPrev(active);
+  const startInterval = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
       setActive((a) => (a + 1) % CARD_COUNT);
-    }, 3200);
-    return () => clearInterval(id);
-  }, [active]);
+    }, 3500);
+  };
+
+  useEffect(() => {
+    startInterval();
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, []);
+
+  const goTo = (i: number) => {
+    setActive(i);
+    startInterval(); // reset timer on manual nav
+  };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-    const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-    rotateY.set(x * 22);
-    rotateX.set(y * -14);
+    tiltY.set(((e.clientX - rect.left - rect.width / 2) / rect.width) * 18);
+    tiltX.set(((e.clientY - rect.top - rect.height / 2) / rect.height) * -12);
   };
-  const handleMouseLeave = () => { rotateX.set(0); rotateY.set(0); };
-
+  const handleMouseLeave = () => { tiltX.set(0); tiltY.set(0); };
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!heroRef.current) return;
     const t = e.touches[0];
     const rect = heroRef.current.getBoundingClientRect();
-    rotateY.set(((t.clientX - rect.left - rect.width / 2) / rect.width) * 22);
-    rotateX.set(((t.clientY - rect.top - rect.height / 2) / rect.height) * -14);
+    tiltY.set(((t.clientX - rect.left - rect.width / 2) / rect.width) * 18);
+    tiltX.set(((t.clientY - rect.top - rect.height / 2) / rect.height) * -12);
   };
 
-  const goTo = (i: number) => {
-    setDirection(i > active ? 1 : -1);
-    setPrev(active);
-    setActive(i);
-  };
+  const springCfg = { type: "spring" as const, stiffness: 200, damping: 32, mass: 1 };
 
   return (
     <div
@@ -81,97 +87,104 @@ const CapSlider = () => {
       onMouseLeave={handleMouseLeave}
       onTouchMove={handleTouchMove}
       className="relative w-full flex items-center justify-center"
-      style={{ height: "56vh", minHeight: 340 }}
+      style={{ height: "58vh", minHeight: 360 }}
     >
-      {/* Glow behind active cap */}
+      {/* Ambient glow — color-keyed to active cap */}
       <motion.div
-        className="absolute rounded-full blur-[100px] opacity-30 pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse, ${caps[active].color}88, transparent)`,
-          width: 500, height: 400,
+        className="absolute rounded-full blur-[120px] pointer-events-none"
+        animate={{
+          background: `radial-gradient(ellipse, ${caps[active].color}66, transparent)`,
+          scale: [0.9, 1.08, 0.9],
+          opacity: [0.28, 0.42, 0.28],
         }}
-        animate={{ scale: [0.9, 1.05, 0.9], opacity: [0.22, 0.38, 0.22] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        style={{ width: 560, height: 440 }}
       />
 
-      {/* Deck — back cards */}
+      {/* All caps — always mounted, position driven by slot */}
       {caps.map((cap, i) => {
-        if (i === active) return null;
-        const offset = i < active ? -1 : 1;
-        const isSecond = Math.abs(i - active) === 1 || (active === 0 && i === 2) || (active === 2 && i === 0);
+        const slot = getSlot(i, active, CARD_COUNT); // -1 | 0 | 1
+        const isActive = slot === 0;
+
+        const xOffset  = slot * 220;
+        const scale    = isActive ? 1 : 0.62;
+        const rotY     = isActive ? 0 : slot * 28;
+        const rotZ     = isActive ? 0 : slot * 4;
+        const opacity  = isActive ? 1 : 0.48;
+        const zIndex   = isActive ? 10 : 2;
+
         return (
           <motion.div
             key={i}
-            className="absolute cursor-pointer select-none"
-            initial={false}
-            animate={{
-              x: offset * (isSecond ? 160 : 280),
-              scale: isSecond ? 0.72 : 0.55,
-              rotateY: offset * 32,
-              rotateZ: offset * 5,
-              opacity: isSecond ? 0.55 : 0.28,
-              zIndex: isSecond ? 1 : 0,
+            className="absolute select-none"
+            style={{
+              cursor: isActive ? "default" : "pointer",
+              zIndex,
+              // tilt only on active cap
+              rotateX: isActive ? smoothTiltX : 0,
+              rotateY: isActive ? smoothTiltY : 0,
+              perspective: 1000,
             }}
-            transition={{ type: "spring", stiffness: 260, damping: 30 }}
-            onClick={() => goTo(i)}
-            style={{ perspective: 900 }}
+            animate={{
+              x: xOffset,
+              scale,
+              rotateY: rotY,
+              rotateZ: rotZ,
+              opacity,
+            }}
+            transition={springCfg}
+            onClick={() => !isActive && goTo(i)}
           >
-            <img
+            {/* Glow ring behind active cap */}
+            {isActive && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                animate={{ scale: [1, 1.08, 1], opacity: [0.12, 0.28, 0.12] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  background: `radial-gradient(ellipse, ${cap.color}55, transparent)`,
+                  filter: "blur(36px)",
+                }}
+              />
+            )}
+
+            <motion.img
               src={cap.src}
               alt={cap.label}
-              className="w-56 sm:w-64 md:w-72 h-auto drop-shadow-[0_40px_60px_rgba(0,0,0,0.6)]"
+              className="w-64 sm:w-80 md:w-[420px] lg:w-[500px] h-auto"
+              style={{
+                filter: isActive
+                  ? "drop-shadow(0 60px 80px rgba(0,0,0,0.8))"
+                  : "drop-shadow(0 30px 40px rgba(0,0,0,0.5))",
+              }}
+              animate={isActive ? { y: [0, -12, 0] } : { y: 0 }}
+              transition={
+                isActive
+                  ? { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                  : { duration: 0.4 }
+              }
             />
+
+            {/* Ground shadow under active cap */}
+            {isActive && (
+              <motion.div
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-52 md:w-72 h-4 rounded-full blur-2xl"
+                style={{ background: `radial-gradient(ellipse, ${cap.color}55, transparent)` }}
+                animate={{ scaleX: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            )}
           </motion.div>
         );
       })}
 
-      {/* Active card — front */}
-      <AnimatePresence mode="popLayout">
-        <motion.div
-          key={active}
-          className="relative z-10 select-none"
-          initial={{ opacity: 0, scale: 0.6, rotateY: direction * -60, x: direction * 300 }}
-          animate={{ opacity: 1, scale: 1, rotateY: 0, x: 0 }}
-          exit={{ opacity: 0, scale: 0.7, rotateY: direction * 60, x: direction * -300 }}
-          transition={{ type: "spring", stiffness: 220, damping: 28 }}
-          style={{ rotateX: smoothY, rotateY: smoothX, perspective: 1000 }}
-        >
-          {/* Animated glow ring */}
-          <motion.div
-            className="absolute inset-0 rounded-full pointer-events-none"
-            animate={{ scale: [1, 1.06, 1], opacity: [0.15, 0.3, 0.15] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              background: `radial-gradient(ellipse, ${caps[active].color}44, transparent)`,
-              filter: "blur(40px)",
-            }}
-          />
-
-          <motion.img
-            src={caps[active].src}
-            alt={caps[active].label}
-            className="w-72 sm:w-[340px] md:w-[430px] lg:w-[500px] h-auto drop-shadow-[0_60px_90px_rgba(0,0,0,0.75)]"
-            animate={{ y: [0, -14, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          {/* Ground shadow */}
-          <motion.div
-            className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 md:w-64 h-5 rounded-full blur-2xl"
-            style={{ background: `radial-gradient(ellipse, ${caps[active].color}44, transparent)` }}
-            animate={{ scaleX: [1, 1.12, 1], opacity: [0.35, 0.55, 0.35] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-      </AnimatePresence>
-
       {/* Dot navigation */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2.5">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2.5 z-20">
         {caps.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`rounded-full transition-all duration-400 ${
+            className={`rounded-full transition-all duration-300 ${
               i === active
                 ? "w-6 h-2 bg-primary"
                 : "w-2 h-2 bg-muted-foreground/40 hover:bg-muted-foreground"
