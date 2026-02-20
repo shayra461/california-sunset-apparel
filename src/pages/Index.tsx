@@ -21,9 +21,9 @@ const categoryCards = [
 ];
 
 const caps = [
-  { src: capRoyalBlue,  label: "Royal Blue Snapback",    color: "#1e4fc2" },
-  { src: capGreenMl,    label: "Kelly Green Snapback",   color: "#1a9e40" },
-  { src: capOrangeBlue, label: "Orange & Blue Snapback", color: "#c94a0a" },
+  { src: capRoyalBlue,  label: "Royal Blue Snapback",    color: "#1e4fc2", imgScale: 1.38 },
+  { src: capGreenMl,    label: "Kelly Green Snapback",   color: "#1a9e40", imgScale: 1 },
+  { src: capOrangeBlue, label: "Orange & Blue Snapback", color: "#c94a0a", imgScale: 1.38 },
 ];
 
 const CARD_COUNT = caps.length;
@@ -153,6 +153,7 @@ const CapSlider = () => {
               alt={cap.label}
               className="w-64 sm:w-80 md:w-[420px] lg:w-[500px] h-auto"
               style={{
+                scale: cap.imgScale,
                 filter: isActive
                   ? "drop-shadow(0 60px 80px rgba(0,0,0,0.8))"
                   : "drop-shadow(0 30px 40px rgba(0,0,0,0.5))",
