@@ -20,7 +20,7 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 glass-surface">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <img src={logo} alt="ML" className="h-10 w-auto" />
+          <img src={logo} alt="ML" className="h-14 w-auto" style={{ mixBlendMode: "screen" }} />
           <span className="text-body text-sm font-light tracking-[0.3em] uppercase hidden sm:block text-foreground">
             Michael Lenny
           </span>

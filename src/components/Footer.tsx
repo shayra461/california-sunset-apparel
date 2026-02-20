@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-1">
-            <img src={logo} alt="ML" className="h-12 w-auto mb-4" />
+            <img src={logo} alt="ML" className="h-16 w-auto mb-4" style={{ mixBlendMode: "screen" }} />
             <p className="text-muted-foreground text-sm leading-relaxed">
               Premium custom apparel designed & printed in California.
             </p>
