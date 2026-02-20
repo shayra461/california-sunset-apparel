@@ -280,9 +280,7 @@ const Index = () => {
     offset: ["start 0.9", "start 0.3"],
   });
   const textY = useTransform(textScroll, [0, 1], [80, 0]);
-  const textOpacity = useTransform(textScroll, [0, 0.4], [0, 1]);
   const smoothTextY = useSpring(textY, { stiffness: 80, damping: 20 });
-  const smoothTextOp = useSpring(textOpacity, { stiffness: 80, damping: 20 });
 
   return (
     <Layout>
@@ -331,7 +329,7 @@ const Index = () => {
           {/* Text block — rises up as user scrolls hero */}
           <motion.div
             ref={textBlockRef}
-            style={{ y: smoothTextY, opacity: smoothTextOp }}
+            style={{ y: smoothTextY }}
             className="text-center px-4 mt-4"
           >
             <h1 className="text-display text-5xl sm:text-7xl md:text-8xl lg:text-[7rem] font-bold tracking-tighter text-foreground leading-[0.88] mb-4">
@@ -378,25 +376,6 @@ const Index = () => {
           </motion.div>
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-5 h-9 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-1.5"
-          >
-            <motion.div
-              animate={{ opacity: [1, 0], y: [0, 12] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1 h-2 rounded-full bg-primary"
-            />
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ── Brand statement with scroll-reveal words ── */}
