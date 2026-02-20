@@ -1,9 +1,16 @@
-import productTshirt from "@/assets/product-tshirt.jpg";
+import prodTshirtBlue from "@/assets/prod-tshirt-blue.jpg";
+import prodTshirtBlack from "@/assets/prod-tshirt-black.jpg";
+import prodTshirtCream from "@/assets/prod-tshirt-cream.jpg";
+import prodTshirtCream2 from "@/assets/prod-tshirt-cream2.jpg";
+import prodCapOrangeBlue from "@/assets/prod-cap-orange-blue.jpg";
+import prodCapGreen from "@/assets/prod-cap-green.png";
+import prodCapRoyalBlue from "@/assets/prod-cap-royal-blue.png";
+import prodCapGreenLifestyle from "@/assets/prod-cap-green-lifestyle.png";
+import prodCapOrangeLifestyle from "@/assets/prod-cap-orange-lifestyle.jpg";
+import prodCapBlueLifestyle from "@/assets/prod-cap-blue-lifestyle.jpg";
 import productHoodie from "@/assets/product-hoodie.jpg";
-import productCap from "@/assets/product-cap.jpg";
 import productPolo from "@/assets/product-polo.jpg";
 import productJersey from "@/assets/product-jersey.jpg";
-import heroCap from "@/assets/hero-cap.png";
 
 export type Product = {
   id: string;
@@ -19,22 +26,94 @@ export const categories = ["All", "T-Shirts", "Hoodies", "Caps", "Polo Shirts", 
 
 export const products: Product[] = [
   {
-    id: "tshirt-classic-1",
-    name: "Classic Logo Tee",
+    id: "tshirt-ml-blue",
+    name: "Michael Lenny Signature Tee — Sky Blue",
     category: "T-Shirts",
     price: 45,
-    image: productTshirt,
-    description: "Premium heavyweight cotton tee with custom ML monogram print. Oversized fit, ribbed collar, and drop shoulder construction. Designed & printed in California.",
+    image: prodTshirtBlue,
+    description: "Premium cotton tee with the iconic Michael Lenny script and ML monogram. Soft sky blue colorway. Designed & printed in California.",
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
   {
-    id: "tshirt-essential-2",
-    name: "Essential Crew Tee",
+    id: "tshirt-discipline",
+    name: "Discipline Tee — Black",
     category: "T-Shirts",
-    price: 40,
-    image: productTshirt,
-    description: "Everyday essential tee crafted from premium combed cotton. Clean silhouette with subtle branding detail.",
+    price: 48,
+    image: prodTshirtBlack,
+    description: "Bold statement tee with 'Discipline Separates You From The Pack' varsity print. Heavy cotton, oversized fit.",
     sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: "tshirt-cream-blue",
+    name: "ML Clothing Co. Tee — Cream / Blue",
+    category: "T-Shirts",
+    price: 45,
+    image: prodTshirtCream,
+    description: "Vintage-wash cream tee with 'Michael Lenny Clothing Company — Authentic Casual Wear Since 1962' script. Classic script lettering.",
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: "tshirt-cream-black",
+    name: "ML Clothing Co. Tee — Cream / Black",
+    category: "T-Shirts",
+    price: 45,
+    image: prodTshirtCream2,
+    description: "Vintage-wash cream tee with bold black script branding. Relaxed fit, premium combed cotton.",
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: "cap-orange-blue",
+    name: "ML Snapback — Orange & Blue",
+    category: "Caps",
+    price: 42,
+    image: prodCapOrangeBlue,
+    description: "Structured snapback with 3D embroidered ML monogram. Premium wool-blend orange body with royal blue brim. One size fits most.",
+    sizes: ["One Size"],
+  },
+  {
+    id: "cap-green",
+    name: "Michael Lenny Snapback — Kelly Green",
+    category: "Caps",
+    price: 42,
+    image: prodCapGreen,
+    description: "Kelly green snapback with embroidered 'Michael Lenny' script in white. Clean, premium finish.",
+    sizes: ["One Size"],
+  },
+  {
+    id: "cap-royal-blue",
+    name: "ML Snapback — Royal Blue & White",
+    category: "Caps",
+    price: 42,
+    image: prodCapRoyalBlue,
+    description: "Royal blue structured snapback with white brim and 3D embroidered ML monogram. A California classic.",
+    sizes: ["One Size"],
+  },
+  {
+    id: "cap-green-lifestyle",
+    name: "ML Green Cap — Street Edition",
+    category: "Caps",
+    price: 44,
+    image: prodCapGreenLifestyle,
+    description: "The iconic Michael Lenny green cap, styled for the streets. Same premium build, worn by real people.",
+    sizes: ["One Size"],
+  },
+  {
+    id: "cap-orange-lifestyle",
+    name: "ML Orange Cap — Street Edition",
+    category: "Caps",
+    price: 44,
+    image: prodCapOrangeLifestyle,
+    description: "The Orange & Blue ML snapback worn in the streets of New York. Premium 3D embroidery, structured fit.",
+    sizes: ["One Size"],
+  },
+  {
+    id: "cap-blue-lifestyle",
+    name: "ML Blue Cap — Street Edition",
+    category: "Caps",
+    price: 44,
+    image: prodCapBlueLifestyle,
+    description: "Royal Blue ML cap styled for everyday wear. Bold street presence with premium construction.",
+    sizes: ["One Size"],
   },
   {
     id: "hoodie-heritage-1",
@@ -53,24 +132,6 @@ export const products: Product[] = [
     image: productHoodie,
     description: "Full-zip hoodie with California sunset gradient lining. Premium heavyweight fleece construction.",
     sizes: ["S", "M", "L", "XL", "XXL"],
-  },
-  {
-    id: "cap-snapback-1",
-    name: "ML Signature Snapback",
-    category: "Caps",
-    price: 38,
-    image: heroCap,
-    description: "Premium structured snapback with 3D embroidered ML monogram. Adjustable snap closure. One size fits most.",
-    sizes: ["One Size"],
-  },
-  {
-    id: "cap-dad-2",
-    name: "California Dad Cap",
-    category: "Caps",
-    price: 32,
-    image: productCap,
-    description: "Relaxed fit dad cap with embroidered California script. Adjustable buckle closure.",
-    sizes: ["One Size"],
   },
   {
     id: "polo-classic-1",
