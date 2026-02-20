@@ -271,8 +271,7 @@ const Index = () => {
     target: heroSectionRef,
     offset: ["start start", "end start"],
   });
-  const heroOpacity = useTransform(heroScroll, [0, 0.5], [1, 0]);
-  const heroScale = useTransform(heroScroll, [0, 0.5], [1, 0.92]);
+  const heroScale = useTransform(heroScroll, [0, 0.5], [1, 0.96]);
   const parallaxY = useTransform(heroScroll, [0, 1], [0, -80]);
 
   const { scrollYProgress: textScroll } = useScroll({
@@ -315,7 +314,7 @@ const Index = () => {
         />
 
         <motion.div
-          style={{ opacity: heroOpacity, scale: heroScale }}
+          style={{ scale: heroScale }}
           className="w-full flex flex-col items-center z-10"
         >
           {/* ── GAP below navbar then cap ── */}
