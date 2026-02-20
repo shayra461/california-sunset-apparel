@@ -388,7 +388,7 @@ const Index = () => {
             className="text-display text-3xl sm:text-4xl md:text-6xl font-bold text-foreground mb-6 max-w-4xl mx-auto leading-tight"
           />
           <ScrollReveal delay={200}>
-            <p className="text-body text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed mb-10">
+            <p className="text-body text-foreground/80 text-lg max-w-2xl mx-auto leading-relaxed mb-10">
               Every piece from Michael Lenny Apparel Group is custom designed and printed
               in California. Premium fabrics, meticulous craftsmanship, designs that make a statement.
             </p>
