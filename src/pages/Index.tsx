@@ -21,8 +21,8 @@ const categoryCards = [
 ];
 
 const caps = [
-  { src: capRoyalBlue,  label: "Royal Blue Snapback",    color: "#1e4fc2", imgScale: 1.38 },
-  { src: capGreenMl,    label: "Kelly Green Snapback",   color: "#1a9e40", imgScale: 1 },
+  { src: capRoyalBlue, label: "Royal Blue Snapback", color: "#1e4fc2", imgScale: 1.38 },
+  { src: capGreenMl, label: "Kelly Green Snapback", color: "#1a9e40", imgScale: 1 },
   { src: capOrangeBlue, label: "Orange & Blue Snapback", color: "#c94a0a", imgScale: 1.38 },
 ];
 
@@ -106,12 +106,12 @@ const CapSlider = () => {
         const slot = getSlot(i, active, CARD_COUNT); // -1 | 0 | 1
         const isActive = slot === 0;
 
-        const xOffset  = slot * 220;
-        const scale    = isActive ? 1 : 0.62;
-        const rotY     = isActive ? 0 : slot * 28;
-        const rotZ     = isActive ? 0 : slot * 4;
-        const opacity  = isActive ? 1 : 0.48;
-        const zIndex   = isActive ? 10 : 2;
+        const xOffset = slot * 220;
+        const scale = isActive ? 1 : 0.62;
+        const rotY = isActive ? 0 : slot * 28;
+        const rotZ = isActive ? 0 : slot * 4;
+        const opacity = isActive ? 1 : 0.48;
+        const zIndex = isActive ? 10 : 2;
 
         return (
           <motion.div
@@ -185,11 +185,10 @@ const CapSlider = () => {
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === active
+            className={`rounded-full transition-all duration-300 ${i === active
                 ? "w-6 h-2 bg-primary"
                 : "w-2 h-2 bg-muted-foreground/40 hover:bg-muted-foreground"
-            }`}
+              }`}
           />
         ))}
       </div>
@@ -318,7 +317,7 @@ const Index = () => {
           className="w-full flex flex-col items-center z-10"
         >
           {/* ── GAP below navbar then cap ── */}
-          <div className="h-20 sm:h-24" /> {/* Gap between nav and cap */}
+          <div className="h-28 sm:h-32 md:h-40 lg:h-48" /> {/* Gap between nav and cap */}
 
           {/* 3D Cap Shuffle Slider */}
           <div className="w-full">
