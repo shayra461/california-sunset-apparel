@@ -125,8 +125,8 @@
   }
 
   .glass-surface {
-    background: hsl(0 0% 100% / 0.03);
-    backdrop-filter: blur(20px);
+    background: hsl(0 0% 4% / 0.92);
+    backdrop-filter: blur(24px);
     border: 1px solid hsl(0 0% 100% / 0.06);
   }
 
