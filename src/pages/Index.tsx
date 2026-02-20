@@ -4,9 +4,9 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePres
 import { ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import ScrollReveal from "@/components/ScrollReveal";
-import heroCap from "@/assets/hero-cap.png";
-import capGreen from "@/assets/cap-green.png";
-import capOrange from "@/assets/cap-orange.png";
+import capGreenMl from "@/assets/cap-green-ml.png";
+import capOrangeBlue from "@/assets/cap-orange-blue.png";
+import capRoyalBlue from "@/assets/cap-royal-blue.png";
 import productTshirt from "@/assets/product-tshirt.jpg";
 import productHoodie from "@/assets/product-hoodie.jpg";
 import productCap from "@/assets/product-cap.jpg";
@@ -21,9 +21,9 @@ const categoryCards = [
 ];
 
 const caps = [
-  { src: heroCap,   label: "Royal Blue Snapback",    color: "#1e4fc2" },
-  { src: capGreen,  label: "Kelly Green Snapback",   color: "#1a9e40" },
-  { src: capOrange, label: "Orange & Blue Snapback", color: "#c94a0a" },
+  { src: capRoyalBlue,  label: "Royal Blue Snapback",    color: "#1e4fc2" },
+  { src: capGreenMl,    label: "Kelly Green Snapback",   color: "#1a9e40" },
+  { src: capOrangeBlue, label: "Orange & Blue Snapback", color: "#c94a0a" },
 ];
 
 // 3-card shuffle deck
