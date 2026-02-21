@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import ScrollReveal from "@/components/ScrollReveal";
-import capGreenMl from "@/assets/cap-green-ml.png";
-import capOrangeBlue from "@/assets/cap-orange-blue.png";
-import capRoyalBlue from "@/assets/cap-royal-blue.png";
+import capGreenNew from "@/assets/cap-green-new.png";
+import capOrangeNew from "@/assets/cap-orange-new.png";
+import capBlueNew from "@/assets/cap-blue-new.png";
 import productTshirt from "@/assets/product-tshirt.jpg";
 import productHoodie from "@/assets/product-hoodie.jpg";
 import productCap from "@/assets/product-cap.jpg";
@@ -21,9 +21,9 @@ const categoryCards = [
 ];
 
 const caps = [
-  { src: capRoyalBlue, label: "Royal Blue Snapback", color: "#1e4fc2", imgScale: 1.38 },
-  { src: capGreenMl, label: "Kelly Green Snapback", color: "#1a9e40", imgScale: 1 },
-  { src: capOrangeBlue, label: "Orange & Blue Snapback", color: "#c94a0a", imgScale: 1.38 },
+  { src: capBlueNew, label: "Royal Blue Snapback", color: "#1e4fc2", imgScale: 1.2 },
+  { src: capGreenNew, label: "Kelly Green Snapback", color: "#1a9e40", imgScale: 1.2 },
+  { src: capOrangeNew, label: "Orange & Blue Snapback", color: "#c94a0a", imgScale: 1.2 },
 ];
 
 const CARD_COUNT = caps.length;
@@ -58,9 +58,19 @@ const CapSlider = () => {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, []);
 
+  const next = () => {
+    setActive((a) => (a + 1) % CARD_COUNT);
+    startInterval();
+  };
+
+  const prev = () => {
+    setActive((a) => (a - 1 + CARD_COUNT) % CARD_COUNT);
+    startInterval();
+  };
+
   const goTo = (i: number) => {
     setActive(i);
-    startInterval(); // reset timer on manual nav
+    startInterval();
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -86,8 +96,8 @@ const CapSlider = () => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onTouchMove={handleTouchMove}
-      className="relative w-full flex items-center justify-center"
-      style={{ height: "58vh", minHeight: 360 }}
+      className="relative w-full flex items-center justify-center transition-all duration-500"
+      style={{ height: "clamp(380px, 52vh, 580px)" }}
     >
       {/* Ambient glow — color-keyed to active cap */}
       <motion.div
@@ -151,7 +161,7 @@ const CapSlider = () => {
             <motion.img
               src={cap.src}
               alt={cap.label}
-              className="w-64 sm:w-80 md:w-[420px] lg:w-[500px] h-auto"
+              className="w-64 sm:w-80 md:w-[450px] lg:w-[580px] xl:w-[680px] h-auto"
               style={{
                 scale: cap.imgScale,
                 filter: isActive
@@ -179,18 +189,22 @@ const CapSlider = () => {
         );
       })}
 
-      {/* Dot navigation */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2.5 z-20">
-        {caps.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            className={`rounded-full transition-all duration-300 ${i === active
-                ? "w-6 h-2 bg-primary"
-                : "w-2 h-2 bg-muted-foreground/40 hover:bg-muted-foreground"
-              }`}
-          />
-        ))}
+      {/* Side Arrows Navigation */}
+      <div className="absolute inset-x-4 md:inset-x-8 lg:inset-x-12 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none z-40">
+        <button
+          onClick={prev}
+          className="pointer-events-auto p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-md transition-all group/arrow"
+          aria-label="Previous cap"
+        >
+          <ChevronLeft className="w-6 h-6 text-white/50 group-hover/arrow:text-white transition-colors" />
+        </button>
+        <button
+          onClick={next}
+          className="pointer-events-auto p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-md transition-all group/arrow"
+          aria-label="Next cap"
+        >
+          <ChevronRight className="w-6 h-6 text-white/50 group-hover/arrow:text-white transition-colors" />
+        </button>
       </div>
     </div>
   );
@@ -275,9 +289,9 @@ const Index = () => {
 
   const { scrollYProgress: textScroll } = useScroll({
     target: textBlockRef,
-    offset: ["start 0.9", "start 0.3"],
+    offset: ["start 0.9", "start 0.4"],
   });
-  const textY = useTransform(textScroll, [0, 1], [80, 0]);
+  const textY = useTransform(textScroll, [0, 1], [60, 0]);
   const smoothTextY = useSpring(textY, { stiffness: 80, damping: 20 });
 
   return (
@@ -285,7 +299,7 @@ const Index = () => {
       {/* ── HERO ── */}
       <section
         ref={heroSectionRef}
-        className="relative h-screen flex flex-col items-center justify-start overflow-hidden gradient-dark"
+        className="relative min-h-screen flex flex-col items-center justify-center py-20 overflow-hidden gradient-dark"
       >
         {/* Animated rings */}
         <motion.div
@@ -317,7 +331,9 @@ const Index = () => {
           className="w-full flex flex-col items-center z-10"
         >
           {/* ── GAP below navbar then cap ── */}
-          <div className="h-28 sm:h-32 md:h-40 lg:h-48" /> {/* Gap between nav and cap */}
+          {/* Adjusted gap or removed for center alignment */}
+          {/* Increased gap significantly for larger caps to avoid navbar on all screens */}
+          <div className="h-28 sm:h-36 md:h-44 lg:h-52" />
 
           {/* 3D Cap Shuffle Slider */}
           <div className="w-full">
@@ -328,9 +344,9 @@ const Index = () => {
           <motion.div
             ref={textBlockRef}
             style={{ y: smoothTextY }}
-            className="text-center px-4 mt-4"
+            className="text-center px-4 mt-6 sm:mt-8 md:mt-12 lg:mt-16"
           >
-            <h1 className="text-display text-5xl sm:text-7xl md:text-8xl lg:text-[7rem] font-bold tracking-tighter text-foreground leading-[0.88] mb-4">
+            <h1 className="text-display text-4xl sm:text-6xl md:text-7xl lg:text-[6rem] xl:text-[7.5rem] font-bold tracking-tighter text-foreground leading-[0.9] mb-2">
               PREMIUM
               <br />
               <motion.span
